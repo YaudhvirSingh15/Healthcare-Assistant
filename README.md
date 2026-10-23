@@ -1,0 +1,911 @@
+AI Healthcare Assistant with RAG
+An AI-Powered Healthcare Information and Question-Answering Platform
+The AI Healthcare Assistant is an intelligent healthcare information platform designed to help users access relevant, understandable, and context-aware healthcare information through natural-language conversations. It uses Large Language Models (LLMs) and Retrieval-Augmented Generation (RAG) to generate responses grounded in relevant medical documents and healthcare knowledge sources.
+The project aims to combine document retrieval, semantic search, contextual question answering, and a user-friendly interface to make healthcare information more accessible while reducing unsupported or irrelevant AI-generated responses.
+The RAG architecture retrieves relevant information from a healthcare knowledge base and provides that information as context to a language model before generating an answer. This approach is intended to improve the relevance and traceability of responses compared with relying exclusively on a model's pretrained knowledge.
+Project status: Healthcare question answering and RAG capabilities should be documented according to the components implemented in the current repository. Model integration, document ingestion, vector storage, authentication, frontend functionality, evaluation, and deployment status must be verified against the actual implementation.
+The system is intended for healthcare information and educational assistance. It is not a replacement for qualified medical professionals, clinical diagnosis, emergency services, or personalized treatment.
+
+Table of Contents
+Project Overview
+Problem Statement
+Objectives
+Key Features
+System Architecture
+Technology Stack
+Healthcare Knowledge Base
+Retrieval-Augmented Generation
+Backend API
+Authentication and Security
+Frontend Interface
+Project Structure
+Installation and Setup
+Running the Application
+API Endpoints
+Evaluation and Testing
+Current Limitations
+Development Roadmap
+Contributing
+Disclaimer
+1. Project Overview
+
+Traditional healthcare information platforms often rely on static articles, frequently asked questions, or general-purpose conversational AI. Although these approaches can provide useful information, they may not always retrieve the most relevant supporting material or provide answers grounded in a specific healthcare knowledge base.
+
+An AI Healthcare Assistant with RAG is intended to bridge this gap by combining information retrieval with language generation.
+
+The platform aims to connect the following capabilities:
+
+Natural-language interaction: Allow users to ask healthcare-related questions using everyday language.
+Knowledge retrieval: Search relevant medical documents, healthcare guides, and other approved information sources.
+Context-aware responses: Provide retrieved information to a language model as context when generating an answer.
+Evidence-grounded answers: Support responses with relevant document references or source excerpts where available.
+Healthcare information assistance: Explain general health concepts, symptoms, medical terminology, preventive care, and wellness information within the system's supported scope.
+Responsible AI behavior: Communicate uncertainty, avoid unsupported medical claims, and direct users to qualified professionals when appropriate.
+Extensible architecture: Provide a foundation for future improvements such as conversation history, document management, source citations, multilingual interaction, and evaluation pipelines.
+
+The central objective is to build a healthcare information assistant that combines the conversational capabilities of generative AI with retrieval from a relevant and controlled knowledge base.
+
+The exact capabilities depend on the RAG pipeline, language model, data sources, and interface implemented in the project.
+
+2. Problem Statement
+
+Accessing reliable healthcare information can be challenging. Medical information is distributed across multiple documents, technical terminology can be difficult to understand, and general-purpose AI systems may produce responses that are incomplete, outdated, or unsupported by authoritative sources.
+
+A useful healthcare assistant should help users answer questions such as:
+
+What does a particular medical term mean?
+What general information is available about a health condition?
+What information do approved healthcare documents provide about a particular topic?
+Which sources support the generated answer?
+When is a question outside the system's knowledge or intended scope?
+When should the user seek advice from a qualified healthcare professional?
+
+A conventional language model generates answers primarily from its learned parameters and the context supplied to it. Without appropriate retrieval and grounding, it may not reliably reflect the information contained in a project's selected knowledge sources.
+
+Retrieval-Augmented Generation addresses this limitation by retrieving relevant information before generating a response.
+
+The proposed AI Healthcare Assistant uses this approach to provide context-aware healthcare information while emphasizing source relevance, answer quality, privacy, and appropriate medical safety boundaries.
+
+3. Objectives
+
+The primary objectives of the project are:
+
+Develop an AI-powered healthcare question-answering application.
+Integrate a Large Language Model for natural-language response generation.
+Implement a RAG pipeline to retrieve relevant information from healthcare documents.
+Prepare and process healthcare documents for retrieval.
+Generate embeddings and use semantic similarity search when supported by the selected implementation.
+Provide retrieved context to the language model during answer generation.
+Develop a backend API to manage user queries and return generated responses.
+Build a user-friendly interface for healthcare-related conversations.
+Improve answer relevance by grounding generation in retrieved information.
+Support source references and evidence-based responses where the underlying documents permit.
+Evaluate retrieval quality, answer relevance, factual consistency, latency, and failure cases.
+Establish a modular foundation for future improvements in security, monitoring, evaluation, and deployment.
+4. Key Features
+Core functionality
+
+The following features describe the intended core system. Each feature should be marked as implemented only after it has been verified in the actual repository.
+
+Natural-language healthcare question answering.
+Integration with a language model.
+Healthcare document ingestion and preprocessing.
+Retrieval-Augmented Generation pipeline.
+Context-aware response generation.
+Semantic search over a healthcare knowledge base, if a compatible embedding and retrieval system is implemented.
+Backend endpoints for processing questions.
+A web interface for submitting questions and viewing responses.
+Error handling for empty queries, failed retrieval, and unavailable model services.
+Potential advanced features
+
+These features can be included when implemented or planned as future extensions:
+
+Source citations and document-level references.
+Conversation history and contextual follow-up questions.
+Document upload and knowledge-base management.
+Metadata filtering for healthcare topics and document types.
+Hybrid search combining keyword and semantic retrieval.
+Reranking of retrieved documents.
+Query rewriting and retrieval optimization.
+Confidence indicators and insufficient-evidence responses.
+Multilingual healthcare information support.
+User authentication and protected conversation history.
+Feedback collection for answer quality.
+Retrieval and generation evaluation dashboards.
+Monitoring for latency, failures, and retrieval quality.
+
+The availability of these features depends on the project's current code and configured services.
+
+5. System Architecture
+
+The proposed system follows a modular architecture that separates the user interface, backend, retrieval pipeline, knowledge base, and language model.
+
+Current or intended application architecture
+┌─────────────────────────────────┐
+│       Web User Interface         │
+│   Chat / Query / Answer View     │
+└────────────────┬────────────────┘
+                 │
+                 │ HTTP / JSON
+                 ▼
+┌─────────────────────────────────┐
+│          Backend API             │
+│                                 │
+│ Query Validation                │
+│ Request Processing              │
+│ RAG Pipeline Integration        │
+│ Response Formatting             │
+└────────────────┬────────────────┘
+                 │
+                 ▼
+┌─────────────────────────────────┐
+│       RAG Orchestration          │
+│                                 │
+│ Query Preparation               │
+│ Document Retrieval              │
+│ Context Construction            │
+│ Prompt Assembly                 │
+│ Answer Generation               │
+└──────────┬─────────────┬────────┘
+           │             │
+           ▼             ▼
+┌─────────────────┐  ┌─────────────────┐
+│ Healthcare      │  │ Language Model  │
+│ Knowledge Base  │  │                 │
+│                 │  │ Contextual      │
+│ Documents       │  │ Response        │
+│ Embeddings      │  │ Generation      │
+│ Vector Search   │  │                 │
+└─────────────────┘  └─────────────────┘
+           │             │
+           └──────┬──────┘
+                  ▼
+┌─────────────────────────────────┐
+│       Answer and Sources         │
+│                                 │
+│ Generated Response              │
+│ Retrieved Evidence               │
+│ Source References, if available  │
+└─────────────────────────────────┘
+
+
+This diagram represents the intended RAG flow. Individual components should be adjusted to match the implementation, including whether the vector database is local or hosted and whether the language model is accessed locally or through an external API.
+
+RAG processing workflow
+A user submits a healthcare-related question.
+The backend validates and normalizes the query.
+The retrieval component searches the healthcare knowledge base.
+Relevant document chunks are selected according to similarity, metadata, or other configured retrieval criteria.
+The selected context is assembled into a prompt.
+The language model generates a response using the question and retrieved context.
+The application returns the response and any supported source references.
+The interface displays the answer to the user.
+Planned architecture extensions
+
+Future versions may introduce:
+
+A document ingestion and indexing service.
+A dedicated vector database.
+Hybrid retrieval and reranking.
+Conversation memory with appropriate privacy controls.
+Background document-processing jobs.
+Retrieval and answer-quality evaluation.
+Application monitoring and deployment automation.
+
+These extensions should not be described as operational until they have been implemented and tested.
+
+6. Technology Stack
+
+The following table provides a technology framework for the project. Replace the suggested or conditional entries with the actual dependencies used by the repository.
+
+Component	Technology
+Programming language	Python, if used by the backend
+Backend framework	FastAPI or the framework implemented in the project
+Language model	The configured LLM provider or local model
+RAG framework	LangChain, LlamaIndex, or a custom pipeline, if used
+Embedding model	The configured embedding model
+Vector database	FAISS, Chroma, Pinecone, or another selected store
+Document processing	PyPDF, pypdf, PyMuPDF, or another supported parser
+Data processing	pandas and NumPy, if required
+Request validation	Pydantic, if using FastAPI
+Frontend	The framework used by the actual project
+Frontend language	TypeScript or JavaScript, depending on implementation
+Configuration	Environment variables and optionally python-dotenv
+Database	The database actually configured, if any
+Testing	pytest and the relevant frontend testing tools
+Version control	Git
+Potential future technologies
+LangGraph for controlled multi-step workflows.
+A reranking model for improving retrieval relevance.
+A dedicated vector database for scalable document search.
+Redis or another caching system for selected repeated operations.
+Docker for reproducible deployment.
+Cloud hosting and managed model services.
+Observability tools for latency, failures, and quality monitoring.
+
+These are optional architectural choices, not confirmed dependencies.
+
+7. Healthcare Knowledge Base
+
+The quality of a RAG-based healthcare assistant depends heavily on the reliability, coverage, and freshness of its knowledge base.
+
+The knowledge base may contain approved healthcare documents such as:
+
+General healthcare educational material.
+Public-health guidance.
+Medical terminology references.
+Condition and disease information.
+Preventive-care guidance.
+Patient education documents.
+Approved clinical or institutional reference material.
+
+The actual data sources must be documented according to the files and sources used in the project.
+
+Document preparation
+
+A typical ingestion pipeline includes the following steps:
+
+Document collection: Obtain documents from permitted, relevant, and trustworthy sources.
+Text extraction: Extract readable text from supported document formats.
+Cleaning: Remove unnecessary formatting, repeated headers, and extraction artifacts.
+Chunking: Divide documents into manageable text segments while preserving context.
+Metadata assignment: Associate chunks with document titles, source URLs, page numbers, or document categories where available.
+Embedding generation: Convert document chunks into vector representations using an embedding model.
+Indexing: Store the vectors and associated text in the selected retrieval system.
+Validation: Test whether representative healthcare questions retrieve relevant and appropriate material.
+Data quality considerations
+Prefer authoritative, traceable sources.
+Record source names and publication or update dates when available.
+Avoid mixing unrelated or unverified content into the knowledge base.
+Preserve document metadata when practical.
+Handle duplicate documents and overlapping chunks carefully.
+Review licensing and redistribution restrictions.
+Avoid collecting identifiable patient information unless there is a justified, authorized, and appropriately protected use case.
+Establish a process for updating or removing outdated material.
+
+The system should distinguish between information found in the knowledge base and information generated by the language model.
+
+8. Retrieval-Augmented Generation
+What is RAG?
+
+Retrieval-Augmented Generation combines information retrieval with generative AI.
+
+Instead of asking a language model to answer a question using only its pretrained knowledge, the system first retrieves relevant information from an external knowledge source and supplies it as context for response generation.
+
+This can improve relevance and make answers easier to verify, provided that the retrieval results are reliable and the generated response accurately reflects them.
+
+RAG pipeline
+Step 1: Document ingestion
+
+Healthcare documents are loaded from the configured data sources. Supported file formats depend on the document loaders used by the project.
+
+Step 2: Text splitting
+
+Documents are split into smaller chunks so that relevant sections can be retrieved independently.
+
+Chunk size and overlap should be selected based on the document structure, embedding model, and retrieval performance rather than assumed to have universal optimal values.
+
+Step 3: Embedding generation
+
+An embedding model transforms each chunk into a numerical vector that represents semantic information.
+
+These vectors support similarity-based retrieval.
+
+Step 4: Vector indexing
+
+The document vectors, text chunks, and relevant metadata are stored in a vector index or another compatible retrieval system.
+
+Step 5: Query processing
+
+When a user asks a question, the system prepares a query for retrieval. Optional query rewriting or metadata filtering can be added if needed.
+
+Step 6: Relevant context retrieval
+
+The retrieval component selects document chunks that appear relevant to the user's question.
+
+Possible strategies include:
+
+Dense vector similarity search.
+Keyword-based retrieval.
+Hybrid retrieval.
+Metadata filtering.
+Reranking of candidate chunks.
+
+Only the methods actually implemented should be listed as active capabilities.
+
+Step 7: Prompt construction
+
+The retrieved context is combined with the question and instructions that guide the model to answer accurately, avoid unsupported claims, and acknowledge insufficient evidence.
+
+Step 8: Answer generation
+
+The language model generates a response using the provided context.
+
+A healthcare-oriented prompt should encourage clear language, distinguish general information from personalized medical advice, and avoid presenting uncertain conclusions as established facts.
+
+Step 9: Source attribution
+
+When the retrieval pipeline preserves source metadata, the application can return document titles, page numbers, source links, or relevant excerpts.
+
+Citations should refer to actual retrieved sources. They should not be fabricated by the model.
+
+Important distinction
+
+RAG does not guarantee that a response is medically correct. Retrieval may return irrelevant or incomplete information, and a language model may misinterpret the retrieved context.
+
+The quality of the overall system depends on the knowledge base, retrieval performance, prompt design, language model, evaluation process, and safety controls.
+
+9. Backend API
+
+The backend provides the application interface between the frontend, RAG pipeline, and language model.
+
+The actual backend framework and endpoint names must match the repository.
+
+Responsibilities
+
+Depending on the implementation, the backend may:
+
+Receive healthcare questions.
+Validate incoming requests.
+Execute document retrieval.
+Construct model prompts.
+Invoke the configured language model.
+Return generated answers.
+Include retrieved source references.
+Handle missing or insufficient context.
+Return meaningful errors when a model or retrieval service is unavailable.
+Apply authentication and access controls if supported.
+Question-answering workflow
+
+A typical request contains a question:
+
+{
+  "question": "What is hypertension?"
+}
+
+
+A conceptual response could be:
+
+{
+  "answer": "Hypertension is a condition involving persistently elevated blood pressure. A healthcare professional can assess an individual's measurements and health history.",
+  "sources": [],
+  "status": "success"
+}
+
+
+This is an illustrative schema, not a verified response from the running application. The actual response structure should be documented using the implemented endpoint and its real output.
+
+Error handling
+
+The backend should account for cases such as:
+
+Empty or invalid questions.
+No relevant documents found.
+Document-processing failures.
+Vector database or retrieval service unavailability.
+Language model timeouts or API errors.
+Invalid configuration.
+Unexpected exceptions.
+
+Errors should be logged appropriately without exposing API keys, internal prompts, private user information, or sensitive system details.
+
+10. Authentication and Security
+
+Authentication requirements depend on whether the project supports user accounts or operates as a public question-answering application.
+
+If authentication is implemented, this section should describe the actual mechanisms used.
+
+Potential mechanisms include:
+
+User registration and login.
+Secure password hashing.
+Session or token-based authentication.
+Protected conversation history.
+Authorization checks for uploaded documents.
+Rate limiting and abuse prevention.
+Environment-based secret management.
+Environment configuration
+
+Secrets and API credentials should be stored in environment variables rather than hardcoded in source files.
+
+For example, an environment configuration might contain:
+
+LLM_API_KEY=replace_with_your_api_key
+
+
+Use the actual variable name expected by the configured model provider. This example is illustrative and does not establish that a particular provider is in use.
+
+If the application uses a local model and does not require an external API key, omit this setting.
+
+Security considerations
+Never commit .env files or API credentials.
+Do not expose model-provider secrets to frontend code.
+Validate uploaded files and user input.
+Apply access controls to private documents and conversations.
+Limit request sizes and handle abusive traffic.
+Avoid storing sensitive health information unnecessarily.
+Use encrypted transport for deployed applications.
+Define appropriate logging and retention policies.
+Review dependencies and deployment configuration regularly.
+
+Healthcare information can be sensitive. Any deployment that processes personal health information requires an appropriate privacy, security, and regulatory assessment.
+
+These practices should be described as implemented only after verification.
+
+11. Frontend Interface
+
+The frontend provides a convenient way for users to interact with the healthcare assistant.
+
+Its technology and functionality should be updated to match the actual repository.
+
+Potential interface components
+
+Healthcare assistant home page
+
+Introduction to the platform.
+Explanation of the assistant's intended purpose.
+Suggested healthcare questions.
+Clear notice describing its limitations.
+
+Chat interface
+
+Input field for natural-language questions.
+Submit and loading states.
+Formatted assistant responses.
+Error messages for failed requests.
+Follow-up question support where implemented.
+
+Retrieved source display
+
+Source document titles.
+Relevant excerpts.
+Page numbers or document references.
+Links to original sources when available.
+
+Additional interface features
+
+Conversation history.
+Clear-chat controls.
+Responsive layout for different screen sizes.
+Accessible colors, typography, and keyboard interaction.
+Feedback controls for answer quality.
+Frontend-to-backend integration
+
+The frontend sends user questions to the backend through the configured API client. The backend executes the RAG pipeline and returns a response for display.
+
+A successful frontend build demonstrates that the code passes the checks included in that build. It does not independently establish that model integration, retrieval, API communication, or deployment works correctly at runtime.
+
+12. Project Structure
+
+The following is an illustrative structure for a Python-based RAG application. Replace it with the actual repository layout.
+
+AI-Healthcare-Assistant/
+│
+├── app/
+│   ├── main.py
+│   ├── api/
+│   │   └── routes.py
+│   ├── rag/
+│   │   ├── ingest.py
+│   │   ├── retriever.py
+│   │   ├── embeddings.py
+│   │   └── chain.py
+│   ├── services/
+│   │   └── llm_service.py
+│   ├── schemas/
+│   │   └── requests.py
+│   └── core/
+│       └── config.py
+│
+├── data/
+│   ├── documents/
+│   └── processed/
+│
+├── vector_store/
+│
+├── frontend/
+│   ├── src/
+│   ├── public/
+│   └── package.json
+│
+├── tests/
+│   ├── test_api.py
+│   ├── test_retrieval.py
+│   └── test_rag.py
+│
+├── .env.example
+├── .gitignore
+├── requirements.txt
+└── README.md
+
+
+This layout is a proposed organizational example, not a claim about the current repository. A smaller project may keep the RAG logic in fewer files, and a frontend may use a different framework.
+
+Directory responsibilities
+app/: Backend application code.
+app/api/: API route definitions.
+app/rag/: Document ingestion, retrieval, and RAG orchestration.
+app/services/: Model integration and supporting services.
+app/schemas/: Request and response validation models.
+app/core/: Configuration and shared application settings.
+data/documents/: Approved source documents.
+data/processed/: Generated document-processing outputs.
+vector_store/: Local vector index, if the selected database uses local persistence.
+frontend/: User interface.
+tests/: Automated tests for the API and retrieval pipeline.
+
+Generated indexes, private documents, local databases, and environment files should be managed according to the project's data and security policies.
+
+13. Installation and Setup
+Prerequisites
+
+Install the tools required by the actual implementation. A typical setup may require:
+
+Python compatible with the pinned backend dependencies.
+Node.js and npm if a separate JavaScript frontend is used.
+Git.
+Access to the configured language model.
+An API key if the model provider requires one.
+Healthcare documents for the knowledge base.
+Any required local or hosted vector database.
+Step 1: Open or clone the repository
+
+If the project is already on your computer, open its root directory:
+
+cd path/to/AI-Healthcare-Assistant
+
+
+If the repository is hosted remotely, clone it using its actual Git URL.
+
+Step 2: Create a Python virtual environment
+
+On Windows using Git Bash:
+
+python -m venv .venv
+source .venv/Scripts/activate
+
+
+On Windows using PowerShell:
+
+.venv\Scripts\Activate.ps1
+
+
+On macOS or Linux:
+
+source .venv/bin/activate
+
+Step 3: Install backend dependencies
+
+If the repository contains requirements.txt:
+
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+
+
+Use the dependency file supplied by the actual project. Do not install unrelated RAG frameworks or model integrations unless they are required by the implementation.
+
+Step 4: Configure environment variables
+
+If the project provides .env.example, create a local configuration file:
+
+cp .env.example .env
+
+
+Edit .env and supply the settings required by the application, such as model credentials or a vector database connection string.
+
+Do not commit real credentials.
+
+Step 5: Prepare the healthcare documents
+
+Place approved documents in the directory expected by the ingestion pipeline.
+
+For example:
+
+data/documents/
+
+
+The actual folder and supported document formats depend on the implementation.
+
+Step 6: Build the knowledge base
+
+If the project provides a document-ingestion script, run the command documented by that script.
+
+For example, a repository might use:
+
+python -m app.rag.ingest
+
+
+This is a suggested command only. Use it only if the module exists and supports that invocation.
+
+Verify that the documents were processed and the retrieval index was created successfully.
+
+Step 7: Install frontend dependencies
+
+If the frontend is located in frontend/ and contains a package.json:
+
+cd frontend
+npm install
+cd ..
+
+
+If the application uses a different frontend directory, adjust the path accordingly.
+
+14. Running the Application
+
+The exact commands depend on the application's entry points and configuration.
+
+Terminal A: Start the backend
+
+Activate the virtual environment, navigate to the repository root, and run the backend using its actual entry point.
+
+For a FastAPI application whose module is app.main:
+
+python -m uvicorn app.main:app --reload
+
+
+This command assumes that app/main.py exports a FastAPI object named app.
+
+A typical local address is:
+
+http://127.0.0.1:8000
+
+
+If the application exposes interactive API documentation, open:
+
+http://127.0.0.1:8000/docs
+
+Terminal B: Start the frontend
+
+If the frontend uses Vite and is located in frontend/:
+
+cd frontend
+npm run dev
+
+
+Use the actual local address printed by the development server.
+
+Verify the application
+
+Test the health endpoint if one exists:
+
+curl http://127.0.0.1:8000/health
+
+
+A typical successful response might be:
+
+{
+  "status": "ok"
+}
+
+
+This is an illustrative example. The actual endpoint, response fields, and health checks must match the implementation.
+
+Then verify the full question-answering workflow:
+
+Open the frontend.
+Submit a healthcare question covered by the knowledge base.
+Confirm that the backend receives the request.
+Verify that relevant documents are retrieved.
+Confirm that the model generates a response.
+Check that source references are displayed when supported.
+Test a question for which the knowledge base contains insufficient information.
+Verify appropriate error handling when a dependency is unavailable.
+
+A server starting successfully does not prove that the complete RAG pipeline is working correctly.
+
+15. API Endpoints
+
+The actual endpoints must be obtained from the running application or its route definitions.
+
+The following table describes a possible API design.
+
+Method	Endpoint	Access	Purpose
+GET	/health	Public, if implemented	Check application health
+POST	/chat	As configured	Submit a healthcare question
+POST	/query	As configured	Execute a RAG question-answering request
+GET	/sources	As configured	Retrieve available source metadata, if supported
+POST	/feedback	As configured	Submit answer-quality feedback, if implemented
+
+The /chat, /query, /sources, and /feedback paths are examples of possible designs, not confirmed endpoints. Document only the routes present in the actual backend.
+
+Example question request
+
+A possible request schema is:
+
+{
+  "question": "What is hypertension?"
+}
+
+Example response schema
+
+A possible response format is:
+
+{
+  "answer": "A general explanation of hypertension.",
+  "sources": [
+    {
+      "title": "Source document title",
+      "page": 1
+    }
+  ]
+}
+
+
+The values above are placeholders. Real source metadata should come from retrieved documents rather than being generated or invented.
+
+API verification
+
+Use the application's interactive documentation, if available, to confirm:
+
+Actual endpoint paths and HTTP methods.
+Required request fields.
+Response schemas.
+Authentication requirements.
+Error status codes.
+Whether source metadata is returned.
+Whether conversation history is supported.
+16. Evaluation and Testing
+
+Evaluating a healthcare RAG application requires more than checking whether it generates a fluent response.
+
+The system should be evaluated across retrieval quality, answer quality, grounding, reliability, and safety.
+
+Retrieval evaluation
+
+Potential metrics include:
+
+Precision@k: The proportion of the top-k retrieved results judged relevant.
+Recall@k: The proportion of relevant reference documents retrieved within the top-k results.
+Mean Reciprocal Rank (MRR): Measures how highly the first relevant result appears.
+Normalized Discounted Cumulative Gain (NDCG): Evaluates ranking quality while accounting for relevance and position.
+
+These metrics require a suitable set of representative questions and relevance judgments.
+
+Answer evaluation
+
+Potential evaluation dimensions include:
+
+Relevance to the user's question.
+Correctness against trusted reference material.
+Faithfulness to the retrieved context.
+Completeness without unnecessary unsupported details.
+Clarity and readability.
+Accuracy of source attribution.
+Appropriate handling of insufficient evidence.
+
+Automated evaluation can assist with analysis, but it should not be treated as a substitute for expert review of safety-critical medical content.
+
+Operational evaluation
+
+Measure:
+
+Average response latency.
+Retrieval latency.
+Language model latency.
+Error and timeout rates.
+Resource consumption.
+Cost per request when using paid model services.
+Testing strategy
+
+A useful test suite should include:
+
+Unit tests for document processing.
+Tests for chunk creation and metadata preservation.
+Tests for retrieval relevance.
+API request-validation tests.
+Tests for model-service failures.
+Integration tests for the full RAG pipeline.
+Tests for unsupported or out-of-scope questions.
+Tests for fabricated or incorrect citations.
+Privacy and access-control tests where user data is stored.
+Results reporting
+
+No evaluation scores are asserted in this README because actual test results have not been provided.
+
+Once an evaluation dataset is available, record the model and embedding versions, document collection, retrieval settings, prompt configuration, test conditions, and measured results so that future improvements can be compared fairly.
+
+17. Current Limitations
+
+The following are common limitations to investigate and document according to the actual project.
+
+Knowledge-base coverage: The assistant can retrieve only information represented in its indexed sources.
+Retrieval errors: Relevant documents may be missed, ranked too low, or retrieved without enough context.
+Hallucinations: The language model may generate unsupported or incorrect claims despite receiving retrieved context.
+Source quality: Outdated, incomplete, or unreliable documents can lead to misleading answers.
+Medical uncertainty: General healthcare information cannot replace an individualized clinical assessment.
+Limited personalization: Unless specifically designed and clinically validated, the system should not infer a user's diagnosis or treatment needs.
+No guaranteed diagnosis: Generated answers must not be represented as definitive clinical diagnoses.
+Model dependence: Performance, cost, and availability depend on the configured language model and embedding services.
+Latency: Document retrieval and generation may introduce delays.
+Privacy requirements: Conversation logs and uploaded documents may contain sensitive health information.
+Evaluation coverage: A limited test set may not capture all medical topics, populations, languages, or failure modes.
+Operational reliability: External model APIs, local vector stores, and other dependencies may fail.
+Deployment readiness: Production use requires additional security, privacy, monitoring, and operational review.
+
+These limitations should be refined after inspecting the code, running the application, and evaluating its behavior.
+
+18. Development Roadmap
+Phase 1 — Core foundation
+Establish the backend and frontend.
+Configure the language model.
+Prepare the healthcare document collection.
+Implement document parsing and preprocessing.
+Build the initial RAG pipeline.
+Generate embeddings and create the retrieval index.
+Expose the question-answering functionality through the backend.
+Connect the frontend to the API.
+Verify end-to-end question answering.
+Phase 2 — Retrieval quality and grounded responses
+Improve document chunking.
+Tune retrieval parameters.
+Preserve document metadata and source references.
+Introduce hybrid retrieval where beneficial.
+Add reranking if evaluation demonstrates a benefit.
+Improve prompt instructions for grounded answers.
+Handle insufficient or irrelevant retrieval results.
+Add automated retrieval and answer-quality tests.
+Phase 3 — Healthcare safety and reliability
+Define supported question categories.
+Add appropriate responses for out-of-scope questions.
+Improve uncertainty communication.
+Avoid unsupported diagnosis and treatment recommendations.
+Establish source-quality and update policies.
+Test medical misinformation and retrieval failure cases.
+Review sensitive-data handling and access controls.
+Introduce expert review for appropriate evaluation scenarios.
+Phase 4 — User experience and personalization
+Improve conversation history where needed.
+Support contextual follow-up questions.
+Display document references and relevant excerpts.
+Add feedback collection.
+Improve accessibility and responsive design.
+Consider multilingual interaction.
+Add document-management tools if required.
+Phase 5 — Monitoring and deployment
+Expand unit, integration, and end-to-end tests.
+Add request and latency monitoring.
+Track retrieval and answer-quality metrics.
+Implement suitable rate limits and abuse prevention.
+Improve dependency and secret management.
+Document deployment and recovery procedures.
+Perform privacy and security reviews.
+Evaluate the system before any higher-risk real-world use.
+
+The roadmap represents potential future work, not a claim that these features have already been implemented.
+
+19. Contributing
+
+Contributions should improve the application's reliability, retrieval quality, usability, and maintainability.
+
+For local development:
+
+Create a feature branch before making substantial changes.
+Keep API keys, credentials, and private documents out of version control.
+Maintain clear separation between document ingestion, retrieval, and generation.
+Preserve source metadata whenever possible.
+Use reproducible configurations for evaluation.
+Add tests for new API, retrieval, and generation behavior.
+Verify frontend and backend integration after changes.
+Record model, embedding, and retrieval configuration changes.
+Update this README when functionality or setup instructions change.
+Review staged files before committing.
+
+Useful Git checks include:
+
+git status
+git diff --cached
+
+
+Never commit credentials, private health information, access tokens, or sensitive datasets.
+
+20. Disclaimer
+
+The AI Healthcare Assistant is intended to support access to general healthcare information and educational resources. Its outputs are generated using artificial intelligence and may contain errors, omissions, outdated information, or unsupported conclusions.
+
+The application is not a substitute for a qualified healthcare professional, medical diagnosis, personalized treatment, or emergency medical services. Users should consult an appropriate healthcare professional for concerns about symptoms, diagnoses, medications, or treatment decisions.
+
+A retrieved document or generated answer should not automatically be considered medically authoritative. Source reliability, document freshness, retrieval relevance, and response accuracy require appropriate evaluation.
+
+The system should not be used as the sole basis for clinical decisions. Any deployment involving personal health information or clinical workflows requires appropriate privacy protections, security controls, expert oversight, validation, and compliance with applicable requirements.
+
+AI Healthcare Assistant — Making healthcare information more accessible through retrieval-augmented generation.
